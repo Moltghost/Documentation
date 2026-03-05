@@ -2,15 +2,39 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getDocContent } from "@/lib/docs";
+import { getDocContent, getDocSlugs } from "@/lib/docs";
+import { navigation } from "@/lib/navigation";
 import { notFound } from "next/navigation";
 import type { AnchorHTMLAttributes } from "react";
-import { navigation } from "@/lib/navigation";
 
-export const metadata = {
-  title: "Introduction - MOLTGHOST",
-  description: "Introduction to MOLTGHOST documentation",
-};
+interface Props {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+export async function generateStaticParams() {
+  const slugs = await getDocSlugs();
+  return slugs.map((slug) => ({
+    slug,
+  }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const doc = await getDocContent(slug);
+
+  if (!doc) {
+    return {
+      title: "Not Found",
+    };
+  }
+
+  return {
+    title: doc.frontmatter.title || slug,
+    description: doc.frontmatter.description || "Documentation page",
+  };
+}
 
 type ComponentProps = React.HTMLAttributes<HTMLElement> & {
   children?: React.ReactNode;
@@ -87,12 +111,14 @@ const components = {
   ),
 };
 
-export default async function Home() {
-  const doc = await getDocContent("introduction");
+export default async function DocPage({ params }: Props) {
+  const { slug } = await params;
+  const doc = await getDocContent(slug);
 
   if (!doc) {
     notFound();
   }
+
   return (
     <div
       className="relative flex h-screen w-full flex-col overflow-hidden"
