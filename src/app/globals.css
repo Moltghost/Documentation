@@ -11,6 +11,7 @@
   --color-sidebar-hover: rgba(255, 255, 255, 0.08);
   --color-search-bg: #19191c;
   --color-search-border: #2a2d3e;
+  --color-brand-pink: #f4aad8;
   --font-sans: var(--font-irish-grover);
   --font-mono: var(--font-fira-code);
 }
@@ -42,4 +43,13 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
+}
+/* Hide scrollbar while keeping functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

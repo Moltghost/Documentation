@@ -17,11 +17,15 @@ export const navigation: NavItem[] = [
         title: "What is MoltGhost",
         href: "/what-is-moltghost",
       },
+      {
+        title: "Architecture",
+        href: "/architecture",
+      },
     ],
   },
   {
     title: "Core Concepts",
-    href: "/core-concepts",
+    href: "/agent-pod",
     children: [
       {
         title: "Agent Pod",
@@ -35,33 +39,11 @@ export const navigation: NavItem[] = [
         title: "Local LLM",
         href: "/local-llm",
       },
-      {
-        title: "Agent Access",
-        href: "/agent-access",
-      },
     ],
   },
   {
-    title: "Features",
-    href: "/features",
-    children: [
-      {
-        title: "Payment",
-        href: "/payment",
-      },
-      {
-        title: "Private Skills",
-        href: "/private-skills",
-      },
-      {
-        title: "Backup & Restore",
-        href: "/backup-restore",
-      },
-    ],
-  },
-  {
-    title: "Guides",
-    href: "/guides",
+    title: "Operations",
+    href: "/deploy-agent",
     children: [
       {
         title: "Deploy an Agent",
@@ -72,38 +54,34 @@ export const navigation: NavItem[] = [
         href: "/connect-agent",
       },
       {
-        title: "Manage Agent",
+        title: "Manage Agents",
         href: "/manage-agent",
+      },
+      {
+        title: "Agent Lifecycle",
+        href: "/agent-lifecycle",
       },
     ],
   },
   {
-    title: "Agent Lifecycle",
-    href: "/agent-lifecycle",
+    title: "Platform Features",
+    href: "/agent-access",
     children: [
       {
-        title: "Lifecycle Overview",
-        href: "/lifecycle-overview",
+        title: "Agent Access",
+        href: "/agent-access",
       },
       {
-        title: "Deploy",
-        href: "/lifecycle-deploy",
+        title: "Private Skills",
+        href: "/private-skills",
       },
       {
-        title: "Start",
-        href: "/lifecycle-start",
+        title: "Backup & Restore",
+        href: "/backup-restore",
       },
       {
-        title: "Stop",
-        href: "/lifecycle-stop",
-      },
-      {
-        title: "Resume",
-        href: "/lifecycle-resume",
-      },
-      {
-        title: "Terminate",
-        href: "/lifecycle-terminate",
+        title: "Payment & Billing",
+        href: "/payment",
       },
     ],
   },

@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
+
 import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { getDocContent, getDocSlugs } from "@/lib/docs";
 import { navigation } from "@/lib/navigation";
 import { notFound } from "next/navigation";
 import type { AnchorHTMLAttributes } from "react";
+import { NavLink } from "@/components/NavLink";
 
 interface Props {
   params: Promise<{
@@ -51,7 +54,11 @@ const components = {
     <h3 className="mb-3 mt-4 text-xl font-bold text-gray-900" {...props} />
   ),
   p: (props: ComponentProps) => (
-    <p className="mb-4 leading-relaxed text-gray-700" {...props} />
+    <p
+      className="mb-4 leading-relaxed text-gray-700"
+      style={{ fontFamily: "var(--font-fira-code)" }}
+      {...props}
+    />
   ),
   a: (
     props: AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -90,13 +97,13 @@ const components = {
   li: (props: ComponentProps) => <li className="ml-4" {...props} />,
   code: (props: ComponentProps) => (
     <code
-      className="rounded bg-gray-200 px-1.5 py-0.5 font-mono text-sm text-gray-900"
+      className="rounded bg-gray-900 px-1.5 py-0.5 font-mono text-sm text-gray-100"
       {...props}
     />
   ),
   pre: (props: ComponentProps) => (
     <pre
-      className="mb-4 overflow-x-auto rounded-lg bg-gray-100 p-4"
+      className="mb-4 overflow-x-auto rounded-lg bg-gray-900 p-4 text-gray-100"
       {...props}
     />
   ),
@@ -108,6 +115,27 @@ const components = {
   ),
   hr: (props: ComponentProps) => (
     <hr className="my-6 border-gray-300" {...props} />
+  ),
+  table: (props: ComponentProps) => (
+    <div className="mb-6 overflow-x-auto rounded-lg border border-gray-200">
+      <table className="w-full" {...props} />
+    </div>
+  ),
+  thead: (props: ComponentProps) => (
+    <thead className="bg-gray-100" {...props} />
+  ),
+  th: (props: ComponentProps) => (
+    <th
+      className="border-b border-gray-200 px-4 py-3 text-left font-semibold text-gray-900"
+      {...props}
+    />
+  ),
+  tbody: (props: ComponentProps) => <tbody {...props} />,
+  tr: (props: ComponentProps) => (
+    <tr className="border-b border-gray-200 hover:bg-gray-50" {...props} />
+  ),
+  td: (props: ComponentProps) => (
+    <td className="px-4 py-3 text-gray-700" {...props} />
   ),
 };
 
@@ -130,11 +158,11 @@ export default async function DocPage({ params }: Props) {
       }}
     >
       {/* Main Layout */}
-      <div className="relative z-10 flex flex-1 overflow-hidden px-6 pb-6">
+      <div className="relative z-10 flex flex-1 overflow-hidden px-6 py-6">
         {/* Sidebar */}
-        <aside className="relative flex w-60 shrink-0 flex-col overflow-y-auto pr-6">
+        <aside className="no-scrollbar relative flex w-60 shrink-0 flex-col overflow-y-auto pr-6">
           {/* Logo */}
-          <div className="mb-6 px-4 pt-12 shrink-0">
+          <div className="mb-6 px-4 pt-2 shrink-0">
             <Image
               src="/images/moltghost.png"
               alt="MoltGhost Logo"
@@ -162,12 +190,9 @@ export default async function DocPage({ params }: Props) {
                 <ul className="space-y-1 pl-2">
                   {section.children?.map((item) => (
                     <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="block rounded-md px-2 py-1.5 font-mono text-xs text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-                      >
+                      <NavLink href={item.href} title={item.title}>
                         {item.title}
-                      </Link>
+                      </NavLink>
                     </li>
                   ))}
                 </ul>
@@ -191,8 +216,33 @@ export default async function DocPage({ params }: Props) {
         <main className="flex flex-1 overflow-hidden">
           <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-8 shadow-lg">
             <article className="prose max-w-none">
-              <MDXRemote source={doc.content} components={components} />
+              <MDXRemote
+                source={doc.content}
+                components={components}
+                options={{
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                  },
+                }}
+              />
             </article>
+            {/* Footer */}
+            <div className="mt-8 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
+              <p>
+                © 2026 Moltghost.io ·
+                <a href="#" className="hover:text-gray-700 mx-2">
+                  Terms
+                </a>
+                ·
+                <a href="#" className="hover:text-gray-700 mx-2">
+                  Privacy
+                </a>
+                ·
+                <a href="#" className="hover:text-gray-700 mx-2">
+                  Disclaimer
+                </a>
+              </p>
+            </div>
           </div>
         </main>
       </div>
