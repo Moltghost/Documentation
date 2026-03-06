@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSidebar } from "@/components/SidebarContext";
 
 interface NavLinkProps {
   href: string;
@@ -12,10 +13,12 @@ interface NavLinkProps {
 export function NavLink({ href, children, title }: NavLinkProps) {
   const pathname = usePathname();
   const isActive = pathname === href;
+  const { close } = useSidebar();
 
   return (
     <Link
       href={href}
+      onClick={close}
       className={`block rounded-md px-2 py-1.5 font-mono text-xs transition-colors ${
         isActive
           ? "bg-white/20 text-[#F4AAD8] font-semibold"

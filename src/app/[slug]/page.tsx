@@ -1,14 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 
-import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getDocContent, getDocSlugs } from "@/lib/docs";
-import { navigation } from "@/lib/navigation";
 import { notFound } from "next/navigation";
 import type { AnchorHTMLAttributes } from "react";
-import { NavLink } from "@/components/NavLink";
+import { Sidebar } from "@/components/Sidebar";
 
 interface Props {
   params: Promise<{
@@ -158,63 +156,12 @@ export default async function DocPage({ params }: Props) {
       }}
     >
       {/* Main Layout */}
-      <div className="relative z-10 flex flex-1 overflow-hidden px-6 py-6">
-        {/* Sidebar */}
-        <aside className="no-scrollbar relative flex w-60 shrink-0 flex-col overflow-y-auto pr-6">
-          {/* Logo */}
-          <div className="mb-6 px-4 pt-2 shrink-0">
-            <Image
-              src="/images/moltghost.png"
-              alt="MoltGhost Logo"
-              width={64}
-              height={64}
-              className="h-16 w-16 object-contain"
-            />
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-4 space-y-6">
-            {navigation.map((section) => (
-              <div key={section.href}>
-                <h3
-                  className="mb-3 text-xs font-bold uppercase tracking-wider text-white"
-                  style={{ fontFamily: "var(--font-irish-grover)" }}
-                >
-                  {section.title}
-                </h3>
-                <img
-                  src="/images/decorative-line.svg"
-                  alt=""
-                  className="mb-3 h-auto w-32"
-                />
-                <ul className="space-y-1 pl-2">
-                  {section.children?.map((item) => (
-                    <li key={item.href}>
-                      <NavLink href={item.href} title={item.title}>
-                        {item.title}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
-
-          {/* Watermark Logo */}
-          <div className="pointer-events-none absolute bottom-0 left-0 select-none opacity-20">
-            <Image
-              src="/images/moltghost.png"
-              alt=""
-              width={200}
-              height={200}
-              className="h-auto w-48 object-contain"
-            />
-          </div>
-        </aside>
+      <div className="relative z-10 flex flex-1 overflow-hidden px-4 py-4 md:px-6 md:py-6">
+        <Sidebar />
 
         {/* Main Content Area */}
-        <main className="flex flex-1 overflow-hidden">
-          <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-8 shadow-lg">
+        <main className="flex min-w-0 flex-1 overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-lg sm:p-6 md:p-8">
             <article className="prose max-w-none">
               <MDXRemote
                 source={doc.content}
