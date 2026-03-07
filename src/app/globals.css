@@ -12,8 +12,8 @@
   --color-search-bg: #19191c;
   --color-search-border: #2a2d3e;
   --color-brand-pink: #f4aad8;
-  --font-sans: var(--font-irish-grover);
-  --font-mono: var(--font-fira-code);
+  --font-sans: var(--font-circular-std);
+  --font-mono: var(--font-circular-std);
 }
 
 html,

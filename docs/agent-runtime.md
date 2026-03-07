@@ -5,152 +5,83 @@ description: Understanding the Agent Runtime
 
 # Agent Runtime
 
-## Overview
-
-The **Agent Runtime** is the software stack executing AI agents within an Agent Pod container.
-
-It orchestrates input processing, reasoning, tool execution, and output generation—transforming raw prompts into actionable intelligence.
-
-```
-Agent Pod Container → Agent Runtime → [Framework + Model + Tools] → Agent Intelligence
-```
+The software stack that powers AI agents inside each Agent Pod.
 
 ---
 
-## Runtime Architecture
+## What is Agent Runtime?
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    Agent Runtime                     │
-├─────────────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌──────────────────┐  ┌───────┐│
-│  │ Agent Framework │◄►│ Model Runtime    │◄►│ Tools ││
-│  │ (OpenClaw)      │  │ (Ollama)         │  │       ││
-│  └─────────────────┘  └──────────────────┘  └───────┘│
-│             │                       │                 │
-│        Reasoning              LLM Inference        APIs│
-└─────────────────────────────────────────────────────┘
-```
+Agent Runtime is the execution layer that runs inside every Agent Pod. It combines an agent framework, a local model runtime, and tools into a single stack that handles all agent operations.
 
-**Key Components:**
-- **OpenClaw** - Agent orchestration and reasoning engine
-- **Ollama** - Local model inference runtime
-- **Local LLM** - Reasoning and generation capability
-- **Tools** - External action execution
+The runtime is responsible for everything that happens after a request reaches your agent. It manages how the agent thinks, which tools it uses, and how it generates responses. Without the runtime, a pod would just be an empty machine with a GPU — the runtime is what turns it into a functioning AI agent.
+
+Everything runs locally inside the pod. There are no external API calls, no shared compute resources, and no data leaving the pod boundary. The runtime operates as a self-contained system that processes requests end-to-end within the isolated environment of the Agent Pod.
 
 ---
 
-## Agent Framework (OpenClaw)
+## Runtime Components
 
-**OpenClaw** powers agent intelligence through:
+The runtime is composed of three core technologies that work together to power every agent:
 
-| Capability | Function |
-|------------|----------|
-| **Reasoning** | Multi-step problem decomposition |
-| **Planning** | Task sequencing and dependency resolution |
-| **Tool Calling** | Dynamic tool selection and execution |
-| **Memory** | Context retention across interactions |
-| **Orchestration** | Workflow coordination |
+| Component | Technology | Role |
+| --- | --- | --- |
+| Agent Framework | OpenClaw | Executes agent logic, reasoning, planning, and tool calls |
+| Model Runtime | Ollama | Loads and runs LLM models locally on GPU |
+| Tools | Custom Functions | Extends agent capabilities with external actions |
 
-```
-User Input → OpenClaw → [Plan → Reason → Tool? → Execute → Observe] → Response
-```
+OpenClaw is the brain of the runtime. It receives incoming requests, breaks them down into steps, decides whether tools are needed, and coordinates everything until a final response is ready. It handles reasoning, planning, and orchestration across every interaction.
 
----
+Ollama is the inference engine. It manages the lifecycle of the local LLM — loading model weights into GPU memory, running inference, and streaming tokens back to OpenClaw. It runs entirely on the pod's dedicated GPU with no external dependencies.
 
-## Model Runtime (Ollama)
-
-**Ollama** manages local LLM lifecycle:
-
-```
-Start Runtime → Load Model Weights → Initialize KV Cache → Warm-up Inference → Ready for Requests
-```
-
-**Ollama Responsibilities:**
-- Model quantization and loading
-- Streaming token generation
-- GPU/CPU inference optimization
-- Framework integration layer
+Tools are optional extensions that give agents the ability to take actions beyond text generation. These can include API calls, database queries, file operations, or any custom function that the agent needs to complete a task. Tools are registered with OpenClaw and called dynamically during the reasoning process.
 
 ---
 
-## Local Model Integration
+## How It Works
 
-**Zero external dependencies**—models execute entirely within the Agent Pod:
+When a request reaches an agent, the runtime processes it through a structured pipeline. Each step happens locally inside the pod, and the entire flow completes without any external service involvement.
 
-```
-External API Model:   Prompt → Network → Provider → Network → Response (200ms+ latency)
-Local Ollama Model:   Prompt → GPU Memory → Inference → Response (50ms latency)
-```
+1. **Receive** — Request arrives via secure Cloudflare Tunnel endpoint.
+2. **Plan** — OpenClaw analyzes the input and determines what actions are needed.
+3. **Reason** — The local LLM generates reasoning based on context and instructions.
+4. **Execute** — If tools are needed, OpenClaw calls them and observes results.
+5. **Respond** — Final response is generated and streamed back to the user.
 
-**Benefits:**
-- ✅ Predictable performance
-- ✅ No rate limits or API costs
-- ✅ Full prompt privacy
-- ✅ Custom model deployment
+For simple questions, the runtime may skip the tool execution step entirely and go straight from reasoning to response. For complex tasks that require multiple steps, the runtime can loop through the plan-reason-execute cycle several times before producing a final answer.
 
----
-
-## Tool Execution Engine
-
-Agents access **structured tools** for external actions:
-
-| Tool Type | Examples | Use Case |
-|-----------|----------|----------|
-| **API Tools** | REST/GraphQL clients | Data retrieval, external services |
-| **Database** | SQL/NoSQL queries | Persistent storage access |
-| **System** | File I/O, shell execution | Local automation |
-| **Custom** | Domain-specific functions | Business logic integration |
-
-```
-Agent: "Check sales data for Q4"
-↓
-OpenClaw → Select CRM Tool → Execute Query → Parse Results → Reason → Respond
-```
+The entire pipeline runs with zero external dependencies. All reasoning happens on the pod's GPU, all tool execution happens within the pod's network boundary, and all responses are delivered through the secure tunnel without touching any third-party infrastructure.
 
 ---
 
-## Initialization Sequence
+## Initialization
 
-When a Pod starts, the runtime initializes in this order:
+When an Agent Pod starts, the runtime goes through a sequential boot process to bring the agent online. Each step must complete before the next one begins, ensuring the agent is fully ready before it starts accepting requests.
 
-1. **Container Boot** - Platform provisions compute
-2. **Framework Load** - OpenClaw initializes
-3. **Model Server Start** - Ollama launches
-4. **Model Weights** - LLM loads into VRAM
-5. **Warm-up** - Initial inference test
-6. **Ready** - Agent accepts requests
+1. **Container Boot** — Pod environment is provisioned and the container starts.
+2. **Framework Init** — OpenClaw starts and loads the agent's configuration, including registered tools and system prompts.
+3. **Model Server Start** — Ollama launches and initializes on the GPU.
+4. **Load Model** — LLM weights are loaded from disk into GPU VRAM.
+5. **Ready** — Agent begins accepting and processing requests.
 
-**Typical Timeline:**
-- Small models (7B): ~30 seconds
-- Medium models (70B): ~90 seconds  
-- Large models (405B): ~3-5 minutes
+The time it takes to complete initialization depends primarily on the size of the model being loaded. Smaller models like Llama 3.1 8B can be ready in under a minute, while larger models like Llama 3.1 405B may take several minutes as the weights are transferred into VRAM.
+
+Once the initialization is complete, the agent remains running and responsive until it is explicitly paused or terminated. Restarting a paused agent goes through the same boot sequence to ensure a clean state.
 
 ---
 
-## Request Processing Flow
+## Privacy Features Integration
 
-```
-1. HTTP Request → Managed Endpoint
-2. OpenClaw receives prompt + context
-3. Planning: Determine required actions
-4. Tool Loop: Execute tools → Observe results
-5. Final Reasoning: Generate response
-6. Stream tokens back to user
-```
+The runtime connects with MoltGhost's privacy features, all running within the same isolated pod. These features are not separate services — they are modules that plug directly into the runtime and operate within the same security boundary.
 
----
+| Feature | How It Connects to Runtime |
+| --- | --- |
+| Private Skills | Custom tools and functions loaded into OpenClaw, callable during agent reasoning |
+| Private Memory | Conversation history and context stored locally inside the pod |
+| Private Backup | Runtime state, model config, and agent data backed up to Storj encrypted |
+| Private Access | Requests reach the runtime through Cloudflare Tunnel with no exposed ports |
+| Private Payment | Agent processes payments via x402 and Solana without exposing transaction data |
+| App Manager | Controls runtime lifecycle from the dashboard — deploy, start, stop, configure |
 
-## Summary
+The runtime is the engine that powers the agent. Privacy features are modules that extend its capabilities while maintaining the same level of isolation and security. Because everything runs inside the same pod, there is no data leakage between components and no external service has access to the agent's internal state.
 
-**Agent Runtime = Production Intelligence Engine**
-
-The runtime transforms compute resources into autonomous agents via:
-
-✅ **OpenClaw** orchestration + reasoning  
-✅ **Ollama** local inference  
-✅ **Tool execution** for real-world actions  
-✅ **Zero external dependencies**  
-✅ **Scalable initialization** for any model size  
-
-Deployed agents become instantly available via secure HTTPS endpoints once runtime initialization completes.
+This integration model ensures that privacy is not an afterthought — it is built into the runtime architecture from the ground up. Every feature that touches the agent operates within the pod boundary, and every piece of data stays under the user's control.

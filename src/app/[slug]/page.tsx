@@ -7,6 +7,8 @@ import { getDocContent, getDocSlugs } from "@/lib/docs";
 import { notFound } from "next/navigation";
 import type { AnchorHTMLAttributes } from "react";
 import { Sidebar } from "@/components/Sidebar";
+import { PrevNextNav } from "@/components/PrevNextNav";
+import { getPrevNext } from "@/lib/navigation";
 
 interface Props {
   params: Promise<{
@@ -54,7 +56,7 @@ const components = {
   p: (props: ComponentProps) => (
     <p
       className="mb-4 leading-relaxed text-gray-700"
-      style={{ fontFamily: "var(--font-fira-code)" }}
+      style={{ fontFamily: "var(--font-circular-std)" }}
       {...props}
     />
   ),
@@ -140,6 +142,7 @@ const components = {
 export default async function DocPage({ params }: Props) {
   const { slug } = await params;
   const doc = await getDocContent(slug);
+  const { prev, next } = getPrevNext(`/${slug}`);
 
   if (!doc) {
     notFound();
@@ -162,7 +165,7 @@ export default async function DocPage({ params }: Props) {
         {/* Main Content Area */}
         <main className="flex min-w-0 flex-1 overflow-hidden">
           <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-lg sm:p-6 md:p-8">
-            <article className="prose max-w-none">
+            <article className="prose mx-auto w-full max-w-3xl">
               <MDXRemote
                 source={doc.content}
                 components={components}
@@ -173,6 +176,9 @@ export default async function DocPage({ params }: Props) {
                 }}
               />
             </article>
+
+            <PrevNextNav prev={prev} next={next} />
+
             {/* Footer */}
             <div className="mt-8 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
               <p>
