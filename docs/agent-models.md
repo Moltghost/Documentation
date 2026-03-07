@@ -6,7 +6,7 @@ slug: agent-models
 
 # Agent Models
 
-Open-source language models that run locally inside each Agent Pod. All inference happens on the pod's GPU — no data is ever sent to external providers.
+Open-source language models that run locally inside each Agent Pod. All inference happens on the pod's GPU, and no data is ever sent to external providers.
 
 ---
 
@@ -16,7 +16,7 @@ Agent Models are the LLMs that give each agent the ability to reason, plan, and 
 
 This means your prompts, context, and outputs never leave the pod. There are no API calls to OpenAI, Anthropic, or any other external provider. The model runs directly on the GPU allocated to your agent, and the weights are stored on the pod's local disk.
 
-Each agent has its own dedicated model instance. Models are not shared across agents — when you deploy an agent with a specific model, that model is loaded into GPU memory exclusively for that agent. This guarantees consistent performance and complete data isolation between agents.
+Each agent has its own dedicated model instance. Models are not shared across agents. When you deploy an agent with a specific model, that model is loaded into GPU memory exclusively for that agent. This guarantees consistent performance and complete data isolation between agents.
 
 ---
 
@@ -62,7 +62,7 @@ Quantization also plays a role. Models can be compressed using formats like Q4 o
 
 When an Agent Pod starts, Ollama initializes and loads the selected model into GPU memory. The model weights are stored on the pod's persistent disk and transferred to VRAM during startup. Once loaded, the model is ready to process requests.
 
-Inference happens entirely on the local GPU. When a request comes in through the Agent Runtime, OpenClaw sends the prompt and context to Ollama, which runs the model and streams tokens back. There is no network hop to an external server — the entire round trip from prompt to response stays inside the pod.
+Inference happens entirely on the local GPU. When a request comes in through the Agent Runtime, OpenClaw sends the prompt and context to Ollama, which runs the model and streams tokens back. There is no network hop to an external server. The entire round trip from prompt to response stays inside the pod.
 
 Ollama handles model lifecycle management including loading, unloading, and serving multiple requests. It supports streaming token generation for real-time response delivery, and optimizes GPU utilization to maximize throughput on the available hardware.
 
@@ -76,6 +76,6 @@ Agent Models are a core part of MoltGhost's privacy architecture. Because every 
 
 Your prompts are never sent to a third-party API. The model weights are stored on your pod's local disk and loaded into your pod's GPU memory. Inference results are generated inside the pod and returned directly to you through a secure Cloudflare Tunnel endpoint.
 
-This is fundamentally different from using hosted AI services where your data passes through provider infrastructure. With MoltGhost, the model is yours, the compute is yours, and the data stays yours — from input to output.
+This is fundamentally different from using hosted AI services where your data passes through provider infrastructure. With MoltGhost, the model is yours, the compute is yours, and the data stays yours, from input to output.
 
 **Pro Tip:** Start with 7B-13B models for development, scale to 70B+ for production reasoning.

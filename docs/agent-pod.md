@@ -11,13 +11,13 @@ A dedicated compute environment where a single AI agent runs in full isolation.
 
 ## What is an Agent Pod?
 
-An Agent Pod is an isolated virtual machine provisioned for one AI agent. Each pod has its own GPU, runtime, model, and storage — nothing is shared between agents.
+An Agent Pod is an isolated virtual machine provisioned for one AI agent. Each pod has its own GPU, runtime, model, and storage. Nothing is shared between agents.
 
 **1 Agent = 1 Pod.**
 
 Every agent gets a dedicated machine with its own compute, runtime stack, and private data. This guarantees full isolation between agents at every level. There is no multi-tenancy, no shared memory, and no cross-agent resource contention.
 
-This design means that one agent's workload can never affect another. If Agent A is running a complex multi-step task that maxes out the GPU, Agent B continues operating normally on its own separate pod with its own dedicated resources. Each agent operates as if it is the only thing running on the machine — because it is.
+This design means that one agent's workload can never affect another. If Agent A is running a complex multi-step task that maxes out the GPU, Agent B continues operating normally on its own separate pod with its own dedicated resources. Each agent operates as if it is the only thing running on the machine, because it is.
 
 ---
 
@@ -25,11 +25,11 @@ This design means that one agent's workload can never affect another. If Agent A
 
 Each Agent Pod contains a complete stack of components needed to run an autonomous AI agent. These components are bundled together inside the pod and operate as a single unit.
 
-- **Compute** — Dedicated GPU and CPU for model inference and processing.
-- **Agent Runtime (OpenClaw)** — Executes agent logic, tools, and workflows.
-- **Model Runtime (Ollama)** — Runs LLM models locally inside the pod.
-- **Storage** — Persistent disk for model weights, agent data, and backups.
-- **Networking (Cloudflare Tunnel)** — Secure private access without exposing ports.
+- **Compute.** Dedicated GPU and CPU for model inference and processing.
+- **Agent Runtime (OpenClaw).** Executes agent logic, tools, and workflows.
+- **Model Runtime (Ollama).** Runs LLM models locally inside the pod.
+- **Storage.** Persistent disk for model weights, agent data, and backups.
+- **Networking (Cloudflare Tunnel).** Secure private access without exposing ports.
 
 The compute layer provides the raw hardware that powers everything else. The GPU handles model inference while the CPU manages the runtime processes, container orchestration, and tool execution. Storage is persistent across restarts, so model weights and agent data are preserved even when the pod is paused.
 
@@ -79,7 +79,7 @@ Each Agent Pod transitions through a series of states from creation to terminati
 
 When you deploy a new agent, the pod enters the Provisioning state while the virtual machine is created and the GPU is allocated. Once the hardware is ready, the runtime boots and the pod moves to Running. At this point, the agent is online and accepting requests.
 
-If you want to temporarily stop an agent without losing its configuration and data, you can pause the pod. In the Paused state, compute resources are released but storage is preserved — your model weights, agent data, and configuration remain intact. When you resume the pod, it goes through the initialization process again and returns to Running.
+If you want to temporarily stop an agent without losing its configuration and data, you can pause the pod. In the Paused state, compute resources are released but storage is preserved. Your model weights, agent data, and configuration remain intact. When you resume the pod, it goes through the initialization process again and returns to Running.
 
 Terminating a pod permanently destroys all associated resources including storage. This action cannot be undone, so any data that has not been backed up will be lost.
 
@@ -87,11 +87,11 @@ Terminating a pod permanently destroys all associated resources including storag
 
 ## Isolation Model
 
-Agent Pods enforce isolation at every layer of the stack. This is not just process-level separation — it is full machine-level isolation where each agent runs on its own dedicated hardware.
+Agent Pods enforce isolation at every layer of the stack. This is not just process-level separation. It is full machine-level isolation where each agent runs on its own dedicated hardware.
 
-- **Compute Isolation** — Dedicated GPU and CPU per agent. No shared processing resources.
-- **Runtime Isolation** — Separate container and process space. Each agent runs in its own environment.
-- **Data Isolation** — Private storage with no shared filesystem. One agent cannot access another agent's data.
-- **Network Isolation** — Managed endpoints via Cloudflare Tunnel. No ports are exposed and no direct network access between pods.
+- **Compute Isolation.** Dedicated GPU and CPU per agent. No shared processing resources.
+- **Runtime Isolation.** Separate container and process space. Each agent runs in its own environment.
+- **Data Isolation.** Private storage with no shared filesystem. One agent cannot access another agent's data.
+- **Network Isolation.** Managed endpoints via Cloudflare Tunnel. No ports are exposed and no direct network access between pods.
 
 This multi-layer isolation model ensures that agents are completely independent from each other. There is no way for one agent to interfere with, observe, or access the resources of another agent. Each pod is a self-contained unit that operates on its own hardware, runs its own processes, stores its own data, and communicates through its own secure tunnel.

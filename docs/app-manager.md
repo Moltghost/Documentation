@@ -5,17 +5,17 @@ slug: app-manager
 
 # App Manager
 
-The dashboard where you deploy, configure, monitor, and control your agents — all from a single interface.
+The dashboard where you deploy, configure, monitor, and control your agents, all from a single interface.
 
 ---
 
 ## What is App Manager?
 
-App Manager is MoltGhost's web-based control panel for managing your AI agents. It is the interface where you create new agents, select their GPU and model, configure their runtime, monitor their status, and control their lifecycle — deploy, start, pause, terminate.
+App Manager is MoltGhost's web-based control panel for managing your AI agents. It is the interface where you create new agents, select their GPU and model, configure their runtime, monitor their status, and control their lifecycle: deploy, start, pause, terminate.
 
 Instead of managing agents through command-line tools, SSH sessions, or infrastructure scripts, App Manager provides a visual interface that handles the complexity behind the scenes. You select your options, click deploy, and the platform provisions an Agent Pod with the hardware, runtime, model, and networking you specified. Everything from GPU allocation to Cloudflare Tunnel setup happens automatically.
 
-App Manager is the single entry point for all agent operations. Whether you need to check an agent's status, change its model, trigger a backup, or review its resource usage, you do it through the dashboard. It connects to every layer of the MoltGhost stack — Agent Pods, Agent Runtime, Private Skills, Private Payment, Private Memory, Private Access, and Private Backup — and gives you control over all of them from one place.
+App Manager is the single entry point for all agent operations. Whether you need to check an agent's status, change its model, trigger a backup, or review its resource usage, you do it through the dashboard. It connects to every layer of the MoltGhost stack (Agent Pods, Agent Runtime, Private Skills, Private Payment, Private Memory, Private Access, and Private Backup) and gives you control over all of them from one place.
 
 ---
 
@@ -45,18 +45,18 @@ App Manager provides direct controls for managing the lifecycle and configuratio
 
 **Lifecycle Controls:**
 
-- **Start** — Boot a paused agent. The pod re-initializes, loads the model, and starts accepting requests.
-- **Pause** — Suspend the agent. Compute resources are released but storage and configuration are preserved.
-- **Terminate** — Permanently destroy the agent and its pod. All resources are released and data is deleted unless backed up.
-- **Restart** — Stop and re-start the agent with a clean runtime state.
+- **Start.** Boot a paused agent. The pod re-initializes, loads the model, and starts accepting requests.
+- **Pause.** Suspend the agent. Compute resources are released but storage and configuration are preserved.
+- **Terminate.** Permanently destroy the agent and its pod. All resources are released and data is deleted unless backed up.
+- **Restart.** Stop and re-start the agent with a clean runtime state.
 
 **Configuration Controls:**
 
-- **Change Model** — Swap the LLM without reprovisioning the pod. The new model is pulled and loaded while the pod remains active.
-- **Update System Prompt** — Modify the agent's base instructions and personality.
-- **Manage Skills** — Enable, disable, or reconfigure Private Skills.
-- **Update Access** — Change authentication settings and access control for the agent's endpoint.
-- **Trigger Backup** — Manually initiate a Private Backup to Storj.
+- **Change Model.** Swap the LLM without reprovisioning the pod. The new model is pulled and loaded while the pod remains active.
+- **Update System Prompt.** Modify the agent's base instructions and personality.
+- **Manage Skills.** Enable, disable, or reconfigure Private Skills.
+- **Update Access.** Change authentication settings and access control for the agent's endpoint.
+- **Trigger Backup.** Manually initiate a Private Backup to Storj.
 
 All changes take effect immediately or after a brief restart, depending on the operation. Model changes require a restart since the new weights need to be loaded into GPU memory. Prompt and skill updates can be applied without downtime.
 
@@ -84,7 +84,7 @@ The monitoring dashboard updates in real-time so you can see how your agent is p
 
 App Manager supports managing multiple agents from a single dashboard. Each agent appears as a separate card with its name, status, model, and GPU type visible at a glance.
 
-You can deploy as many agents as you need, each with its own independent configuration. One agent might run Llama 3.1 70B on an H100 for complex reasoning tasks, while another runs Mistral 7B on an L4 for fast lightweight operations. Each agent is a separate pod with separate resources — App Manager just provides a unified view across all of them.
+You can deploy as many agents as you need, each with its own independent configuration. One agent might run Llama 3.1 70B on an H100 for complex reasoning tasks, while another runs Mistral 7B on an L4 for fast lightweight operations. Each agent is a separate pod with separate resources. App Manager just provides a unified view across all of them.
 
 The dashboard lets you quickly compare agents, identify which ones are running or paused, and take bulk actions when needed. If you need to pause all agents to reduce costs, or trigger backups across multiple agents before a migration, App Manager handles it from one interface.
 
@@ -92,8 +92,8 @@ The dashboard lets you quickly compare agents, identify which ones are running o
 
 ## Security
 
-App Manager itself is secured with authentication and access control. Only the account owner can access the dashboard and manage agents. There is no shared admin access, no team accounts with varying permission levels that could lead to unauthorized changes — your dashboard, your agents, your control.
+App Manager itself is secured with authentication and access control. Only the account owner can access the dashboard and manage agents. There is no shared admin access, no team accounts with varying permission levels that could lead to unauthorized changes. Your dashboard, your agents, your control.
 
-The dashboard communicates with the MoltGhost platform over encrypted connections. When you issue a command — like deploying an agent or triggering a backup — the command is authenticated, encrypted in transit, and executed on the target pod. At no point does the dashboard have direct access to the agent's internal data like conversation history or wallet keys. It can control the agent's lifecycle and configuration, but it cannot read the agent's private data.
+The dashboard communicates with the MoltGhost platform over encrypted connections. When you issue a command, like deploying an agent or triggering a backup, the command is authenticated, encrypted in transit, and executed on the target pod. At no point does the dashboard have direct access to the agent's internal data like conversation history or wallet keys. It can control the agent's lifecycle and configuration, but it cannot read the agent's private data.
 
-This separation ensures that even the management layer respects the privacy guarantees of the platform. App Manager can tell a pod to start, stop, or back up — but it cannot look inside.
+This separation ensures that even the management layer respects the privacy guarantees of the platform. App Manager can tell a pod to start, stop, or back up, but it cannot look inside.

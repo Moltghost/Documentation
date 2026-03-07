@@ -46,7 +46,7 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`no-scrollbar fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col overflow-y-auto bg-[#19191c] px-6 py-6 transition-transform duration-300 md:relative md:w-60 md:translate-x-0 md:bg-transparent md:px-0 md:py-0 md:pr-6 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col bg-[#19191c] px-6 py-6 transition-transform duration-300 md:relative md:w-60 md:translate-x-0 md:bg-transparent md:px-0 md:py-0 md:pr-6 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -83,34 +83,36 @@ export function Sidebar() {
           />
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 space-y-6">
-          {navigation.map((section) => (
-            <div key={section.href}>
-              <h3
-                className="mb-3 text-xs font-bold uppercase tracking-wider text-white"
-                style={{ fontFamily: "var(--font-irish-grover)" }}
-              >
-                {section.title}
-              </h3>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/decorative-line.svg"
-                alt=""
-                className="mb-3 h-auto w-32"
-              />
-              <ul className="space-y-1 pl-2">
-                {section.children?.map((item) => (
-                  <li key={item.href}>
-                    <NavLink href={item.href} title={item.title}>
-                      {item.title}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
+        {/* Scrollable Navigation */}
+        <div className="no-scrollbar flex-1 overflow-y-auto">
+          <nav className="px-4 space-y-6 pb-32">
+            {navigation.map((section) => (
+              <div key={section.href}>
+                <h3
+                  className="mb-3 text-xs font-bold uppercase tracking-wider text-white"
+                  style={{ fontFamily: "var(--font-irish-grover)" }}
+                >
+                  {section.title}
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/decorative-line.svg"
+                  alt=""
+                  className="mb-3 h-auto w-32"
+                />
+                <ul className="space-y-1 pl-2">
+                  {section.children?.map((item) => (
+                    <li key={item.href}>
+                      <NavLink href={item.href} title={item.title}>
+                        {item.title}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
 
         {/* Watermark Logo */}
         <div className="pointer-events-none absolute bottom-0 left-0 select-none opacity-20">

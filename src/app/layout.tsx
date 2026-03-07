@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Irish_Grover } from "next/font/google";
 import localFont from "next/font/local";
+import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
 const circularStd = localFont({
@@ -70,7 +71,24 @@ export default function RootLayout({
       <body
         className={`${circularStd.variable} ${irishGrover.variable} antialiased`}
       >
-        {children}
+        <div
+          className="relative flex h-screen w-full flex-col overflow-hidden"
+          style={{
+            backgroundImage: "url('/images/main-bg-black.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div className="relative z-10 flex flex-1 overflow-hidden px-4 py-4 md:px-6 md:py-6">
+            <Sidebar />
+            <main className="flex min-w-0 flex-1 overflow-hidden">
+              <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-lg sm:p-6 md:p-8">
+                {children}
+              </div>
+            </main>
+          </div>
+        </div>
       </body>
     </html>
   );

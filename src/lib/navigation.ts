@@ -17,6 +17,10 @@ export const navigation: NavItem[] = [
         title: "Architecture",
         href: "/architecture",
       },
+      {
+        title: "Roadmap",
+        href: "/roadmap",
+      },
     ],
   },
   {
@@ -64,6 +68,42 @@ export const navigation: NavItem[] = [
       {
         title: "App Manager",
         href: "/app-manager",
+      },
+    ],
+  },
+  {
+    title: "Token",
+    href: "/token-info",
+    children: [
+      {
+        title: "Token Info",
+        href: "/token-info",
+      },
+    ],
+  },
+  {
+    title: "Resources",
+    href: "/faq",
+    children: [
+      {
+        title: "FAQ",
+        href: "/faq",
+      },
+      {
+        title: "Terms of Service",
+        href: "/terms-of-service",
+      },
+      {
+        title: "Privacy Policy",
+        href: "/privacy-policy",
+      },
+      {
+        title: "Disclaimer",
+        href: "/disclaimer",
+      },
+      {
+        title: "Socials & Links",
+        href: "/socials-links",
       },
     ],
   },

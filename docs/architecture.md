@@ -31,9 +31,9 @@ Diagram above shows how users interact with MoltGhost and how agents are provisi
 
 MoltGhost architecture is built around three key principles:
 
-- **Isolation** — Each agent runs in its own dedicated environment.
-- **Privacy** — Models, data, and execution remain fully private.
-- **Control** — Users maintain full control over compute, models, and agent behavior.
+- **Isolation.** Each agent runs in its own dedicated environment.
+- **Privacy.** Models, data, and execution remain fully private.
+- **Control.** Users maintain full control over compute, models, and agent behavior.
 
 ---
 

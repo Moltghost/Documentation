@@ -6,7 +6,6 @@ import remarkGfm from "remark-gfm";
 import { getDocContent, getDocSlugs } from "@/lib/docs";
 import { notFound } from "next/navigation";
 import type { AnchorHTMLAttributes } from "react";
-import { Sidebar } from "@/components/Sidebar";
 import { PrevNextNav } from "@/components/PrevNextNav";
 import { getPrevNext } from "@/lib/navigation";
 
@@ -149,56 +148,38 @@ export default async function DocPage({ params }: Props) {
   }
 
   return (
-    <div
-      className="relative flex h-screen w-full flex-col overflow-hidden"
-      style={{
-        backgroundImage: "url('/images/main-bg-black.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      {/* Main Layout */}
-      <div className="relative z-10 flex flex-1 overflow-hidden px-4 py-4 md:px-6 md:py-6">
-        <Sidebar />
+    <>
+      <article className="prose mx-auto w-full max-w-3xl">
+        <MDXRemote
+          source={doc.content}
+          components={components}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+            },
+          }}
+        />
+      </article>
 
-        {/* Main Content Area */}
-        <main className="flex min-w-0 flex-1 overflow-hidden">
-          <div className="flex flex-1 flex-col overflow-y-auto rounded-2xl bg-white p-4 shadow-lg sm:p-6 md:p-8">
-            <article className="prose mx-auto w-full max-w-3xl">
-              <MDXRemote
-                source={doc.content}
-                components={components}
-                options={{
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                  },
-                }}
-              />
-            </article>
+      <PrevNextNav prev={prev} next={next} />
 
-            <PrevNextNav prev={prev} next={next} />
-
-            {/* Footer */}
-            <div className="mt-8 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
-              <p>
-                © 2026 Moltghost.io ·
-                <a href="#" className="hover:text-gray-700 mx-2">
-                  Terms
-                </a>
-                ·
-                <a href="#" className="hover:text-gray-700 mx-2">
-                  Privacy
-                </a>
-                ·
-                <a href="#" className="hover:text-gray-700 mx-2">
-                  Disclaimer
-                </a>
-              </p>
-            </div>
-          </div>
-        </main>
+      {/* Footer */}
+      <div className="mt-8 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
+        <p>
+          © 2026 Moltghost.io ·
+          <a href="#" className="hover:text-gray-700 mx-2">
+            Terms
+          </a>
+          ·
+          <a href="#" className="hover:text-gray-700 mx-2">
+            Privacy
+          </a>
+          ·
+          <a href="#" className="hover:text-gray-700 mx-2">
+            Disclaimer
+          </a>
+        </p>
       </div>
-    </div>
+    </>
   );
 }
