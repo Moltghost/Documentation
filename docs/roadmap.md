@@ -54,7 +54,8 @@ Full integration of the Private Payment layer with a balance-based model for pla
 - **Balance System.** Users maintain a credit balance that powers all platform services. Top up your balance and use it across GPU compute, storage, and bandwidth.
 - **Pay-Per-Use Consumption.** Usage-based billing for GPU runtime, storage allocation, and network bandwidth. You only pay for what you use.
 - **Auto-Stop on Zero Balance.** When your balance runs out, active services are automatically paused. No surprise charges, no debt accumulation. Top up to resume.
-- **Crypto Top-Up.** Fund your balance using SOL or supported tokens directly from your wallet. No fiat intermediaries, no KYC friction.
+- **Top-Up via SOL/USDC.** Fund your balance by transferring SOL or USDC directly from your wallet. No fiat intermediaries, no KYC friction.
+- **x402 Integration.** HTTP-native micropayment protocol for agent-to-agent payments and skill execution. Agents pay and get paid per-request without manual intervention.
 - **Balance Dashboard & Usage Tracking.** Real-time visibility into your balance, spending breakdown, and resource consumption history through the App Manager.
 
 ---
